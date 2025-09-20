@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Flashcards - Complete Vocabulary Set</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 30px 20px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+  }
+  
+  .header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .card {
+    width: 100%;
+    height: 180px;
+    perspective: 1000px;
+  }
+  
+  .card-inner {
+    position: relative;
+    width: 100%; 
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  
+  .card:hover .card-inner { 
+    transform: rotateY(180deg); 
+  }
+  
+  .card-front, .card-back {
+    position: absolute; 
+    width: 100%; 
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    padding: 20px;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+  
+  .card-front { 
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    color: #2c3e50;
+  }
+  
+  .card-back { 
+    background: linear-gradient(145deg, #4caf50, #45a049);
+    color: white; 
+    transform: rotateY(180deg);
+  }
+  
+  .word {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #2c3e50;
+  }
+  
+  .pronunciation {
+    font-size: 1rem;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-bottom: 5px;
+  }
+  
+  .meaning {
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+  }
+  
+  .stats {
+    text-align: center;
+    margin-top: 40px;
+    color: white;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  .quiz-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .quiz-container {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  
+  .quiz-word {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  .quiz-pronunciation {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+  
+  .quiz-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  .quiz-input:focus {
+    border-color: #4caf50;
+  }
+  
+  .quiz-input.correct {
+    border-color: #4caf50;
+    background: #e8f5e8;
+    animation: correctPulse 0.6s ease-in-out;
+  }
+  
+  .quiz-input.incorrect {
+    border-color: #f44336;
+    background: #ffeaea;
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  .quiz-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .quiz-btn {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+  }
+  
+  .check-btn {
+    background: #4caf50;
+    color: white;
+  }
+  
+  .check-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+  }
+  
+  .next-btn {
+    background: #2196f3;
+    color: white;
+  }
+  
+  .next-btn:hover {
+    background: #1976d2;
+    transform: translateY(-2px);
+  }
+  
+  .close-btn {
+    background: #f44336;
+    color: white;
+  }
+  
+  .close-btn:hover {
+    background: #d32f2f;
+    transform: translateY(-2px);
+  }
+  
+  .quiz-feedback {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    min-height: 25px;
+  }
+  
+  .correct-answer {
+    color: #4caf50;
+    font-weight: bold;
+  }
+  
+  .incorrect-answer {
+    color: #f44336;
+    font-weight: bold;
+  }
+  
+  .quiz-progress {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 1rem;
+  }
+  
+  .start-quiz-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(145deg, #4caf50, #45a049);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    transition: all 0.3s;
+    z-index: 100;
+  }
+  
+  .start-quiz-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(76, 175, 80, 0.4);
+  }
+  
+  @keyframes correctPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+  
+  @keyframes ting {
+    0% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-5deg); }
+    50% { transform: scale(1.2) rotate(5deg); }
+    75% { transform: scale(1.1) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  
+  .ting-effect {
+    animation: ting 0.6s ease-in-out;
+  }
+  
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 2rem;
+    }
+    
+    .cards-container {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .card {
+      height: 160px;
+    }
+    
+    .word {
+      font-size: 1.5rem;
+    }
+    
+    .meaning {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎓 Vocabulary Flashcards</h1>
+  <p>Hover over each card to reveal the Vietnamese meaning</p>
+</div>
+
+<div class="cards-container">
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">exception</div>
+      <div class="pronunciation">/ɪkˈsepʃn/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">ngoại lệ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">overallocated</div>
+      <div class="pronunciation">/ˌoʊvərˈæləkeɪtɪd/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">phân bổ quá mức</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">ingredients</div>
+      <div class="pronunciation">/ɪnˈɡriːdiənts/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">nguyên liệu, thành phần</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">chronic</div>
+      <div class="pronunciation">/ˈkrɒnɪk/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">mãn tính, kinh niên</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">commencement</div>
+      <div class="pronunciation">/kəˈmensmənt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">sự bắt đầu; lễ tốt nghiệp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">predecessor</div>
+      <div class="pronunciation">/ˈpriːdəsesər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">người tiền nhiệm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">summary</div>
+      <div class="pronunciation">/ˈsʌməri/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">bản tóm tắt</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">assign</div>
+      <div class="pronunciation">/əˈsaɪn/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">phân công</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">sponsor</div>
+      <div class="pronunciation">/ˈspɒnsər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tài trợ; nhà tài trợ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">sensitive</div>
+      <div class="pronunciation">/ˈsensətɪv/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">nhạy cảm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">intentionally</div>
+      <div class="pronunciation">/ɪnˈtenʃənəli/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">cố tình</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">arguable</div>
+      <div class="pronunciation">/ˈɑːrɡjuəbl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">có thể tranh luận</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">inconsistency</div>
+      <div class="pronunciation">/ˌɪnkənˈsɪstənsi/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">sự mâu thuẫn</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">transparency</div>
+      <div class="pronunciation">/trænsˈpærənsi/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tính minh bạch</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">capstone</div>
+      <div class="pronunciation">/ˈkæp.stoʊn/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">đỉnh cao; đồ án tốt nghiệp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">manual</div>
+      <div class="pronunciation">/ˈmænjuəl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thủ công; sách hướng dẫn</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">meticulously</div>
+      <div class="pronunciation">/məˈtɪkjələsli/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tỉ mỉ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">comprehensive</div>
+      <div class="pronunciation">/ˌkɒmprɪˈhensɪv/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">toàn diện</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">scenario</div>
+      <div class="pronunciation">/səˈnɑːriəʊ/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">kịch bản, tình huống</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">malicious</div>
+      <div class="pronunciation">/məˈlɪʃəs/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">độc hại, hiểm độc</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">exploit</div>
+      <div class="pronunciation">/ɪkˈsplɔɪt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">khai thác, lợi dụng</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">immerse</div>
+      <div class="pronunciation">/ɪˈmɜːrs/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">đắm chìm vào</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">theoretical</div>
+      <div class="pronunciation">/ˌθiːəˈretɪkl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thuộc lý thuyết</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">utilize</div>
+      <div class="pronunciation">/ˈjuːtəlaɪz/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tận dụng</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">conduct</div>
+      <div class="pronunciation">/ˈkɒndʌkt/ (n), /kənˈdʌkt/ (v)</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tiến hành; hạnh kiểm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">perspective</div>
+      <div class="pronunciation">/pərˈspektɪv/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">quan điểm, góc nhìn</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">mocking</div>
+      <div class="pronunciation">/ˈmɒkɪŋ/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">chế nhạo</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">belittling</div>
+      <div class="pronunciation">/bɪˈlɪtlɪŋ/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">coi nhẹ, xem thường</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">persistent</div>
+      <div class="pronunciation">/pərˈsɪstənt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">kiên trì, dai dẳng</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">circumstance</div>
+      <div class="pronunciation">/ˈsɜːrkəmstæns/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">hoàn cảnh, tình huống</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">convince</div>
+      <div class="pronunciation">/kənˈvɪns/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thuyết phục</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">compromise</div>
+      <div class="pronunciation">/ˈkɒmprəmaɪz/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thỏa hiệp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">proper</div>
+      <div class="pronunciation">/ˈprɒpər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">đúng, thích hợp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">advisable</div>
+      <div class="pronunciation">/ədˈvaɪzəbl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">nên, đáng làm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">associated</div>
+      <div class="pronunciation">/əˈsəʊʃieɪtɪd/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">liên quan, kết hợp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">combat</div>
+      <div class="pronunciation">/ˈkɒmbæt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">chiến đấu, chống lại</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">countermeasure</div>
+      <div class="pronunciation">/ˈkaʊntərmeʒər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">biện pháp đối phó</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">persistence</div>
+      <div class="pronunciation">/pərˈsɪstəns/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">sự kiên trì</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">intensity</div>
+      <div class="pronunciation">/ɪnˈtensəti/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">cường độ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">assumes</div>
+      <div class="pronunciation">/əˈsjuːmz/ (BrE), /əˈsuːmz/ (AmE)</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">cho rằng, giả định (ngôi 3)</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="stats">
+  <p>📚 Complete set of 40 vocabulary words • Hover to reveal meanings</p>
+</div>
+
+<button class="start-quiz-btn" onclick="startQuiz()">🎯 Bắt đầu Quiz</button>
+
+<div class="quiz-mode" id="quizMode">
+  <div class="quiz-container">
+    <div class="quiz-progress" id="quizProgress">Câu 1 / 40</div>
+    <div class="quiz-word" id="quizWord">exception</div>
+    <div class="quiz-pronunciation" id="quizPronunciation">/ɪkˈsepʃn/</div>
+    <input type="text" class="quiz-input" id="quizInput" placeholder="Nhập nghĩa tiếng Việt..." autocomplete="off">
+    <div class="quiz-feedback" id="quizFeedback"></div>
+    <div class="quiz-buttons">
+      <button class="quiz-btn check-btn" onclick="checkAnswer()">Kiểm tra</button>
+      <button class="quiz-btn next-btn" onclick="nextQuestion()" style="display: none;" id="nextBtn">Câu tiếp theo</button>
+      <button class="quiz-btn close-btn" onclick="closeQuiz()">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const vocabulary = [
+  {word: "exception", meaning: "ngoại lệ", pronunciation: "/ɪkˈsepʃn/"},
+  {word: "overallocated", meaning: "phân bổ quá mức", pronunciation: "/ˌoʊvərˈæləkeɪtɪd/"},
+  {word: "ingredients", meaning: "nguyên liệu, thành phần", pronunciation: "/ɪnˈɡriːdiənts/"},
+  {word: "chronic", meaning: "mãn tính, kinh niên", pronunciation: "/ˈkrɒnɪk/"},
+  {word: "commencement", meaning: "sự bắt đầu; lễ tốt nghiệp", pronunciation: "/kəˈmensmənt/"},
+  {word: "predecessor", meaning: "người tiền nhiệm", pronunciation: "/ˈpriːdəsesər/"},
+  {word: "summary", meaning: "bản tóm tắt", pronunciation: "/ˈsʌməri/"},
+  {word: "assign", meaning: "phân công", pronunciation: "/əˈsaɪn/"},
+  {word: "sponsor", meaning: "tài trợ; nhà tài trợ", pronunciation: "/ˈspɒnsər/"},
+  {word: "sensitive", meaning: "nhạy cảm", pronunciation: "/ˈsensətɪv/"},
+  {word: "intentionally", meaning: "cố tình", pronunciation: "/ɪnˈtenʃənəli/"},
+  {word: "arguable", meaning: "có thể tranh luận", pronunciation: "/ˈɑːrɡjuəbl/"},
+  {word: "inconsistency", meaning: "sự mâu thuẫn", pronunciation: "/ˌɪnkənˈsɪstənsi/"},
+  {word: "transparency", meaning: "tính minh bạch", pronunciation: "/trænsˈpærənsi/"},
+  {word: "capstone", meaning: "đỉnh cao; đồ án tốt nghiệp", pronunciation: "/ˈkæp.stoʊn/"},
+  {word: "manual", meaning: "thủ công; sách hướng dẫn", pronunciation: "/ˈmænjuəl/"},
+  {word: "meticulously", meaning: "tỉ mỉ", pronunciation: "/məˈtɪkjələsli/"},
+  {word: "comprehensive", meaning: "toàn diện", pronunciation: "/ˌkɒmprɪˈhensɪv/"},
+  {word: "scenario", meaning: "kịch bản, tình huống", pronunciation: "/səˈnɑːriəʊ/"},
+  {word: "malicious", meaning: "độc hại, hiểm độc", pronunciation: "/məˈlɪʃəs/"},
+  {word: "exploit", meaning: "khai thác, lợi dụng", pronunciation: "/ɪkˈsplɔɪt/"},
+  {word: "immerse", meaning: "đắm chìm vào", pronunciation: "/ɪˈmɜːrs/"},
+  {word: "theoretical", meaning: "thuộc lý thuyết", pronunciation: "/ˌθiːəˈretɪkl/"},
+  {word: "utilize", meaning: "tận dụng", pronunciation: "/ˈjuːtəlaɪz/"},
+  {word: "conduct", meaning: "tiến hành; hạnh kiểm", pronunciation: "/ˈkɒndʌkt/ (n), /kənˈdʌkt/ (v)"},
+  {word: "perspective", meaning: "quan điểm, góc nhìn", pronunciation: "/pərˈspektɪv/"},
+  {word: "mocking", meaning: "chế nhạo", pronunciation: "/ˈmɒkɪŋ/"},
+  {word: "belittling", meaning: "coi nhẹ, xem thường", pronunciation: "/bɪˈlɪtlɪŋ/"},
+  {word: "persistent", meaning: "kiên trì, dai dẳng", pronunciation: "/pərˈsɪstənt/"},
+  {word: "circumstance", meaning: "hoàn cảnh, tình huống", pronunciation: "/ˈsɜːrkəmstæns/"},
+  {word: "convince", meaning: "thuyết phục", pronunciation: "/kənˈvɪns/"},
+  {word: "compromise", meaning: "thỏa hiệp", pronunciation: "/ˈkɒmprəmaɪz/"},
+  {word: "proper", meaning: "đúng, thích hợp", pronunciation: "/ˈprɒpər/"},
+  {word: "advisable", meaning: "nên, đáng làm", pronunciation: "/ədˈvaɪzəbl/"},
+  {word: "associated", meaning: "liên quan, kết hợp", pronunciation: "/əˈsəʊʃieɪtɪd/"},
+  {word: "combat", meaning: "chiến đấu, chống lại", pronunciation: "/ˈkɒmbæt/"},
+  {word: "countermeasure", meaning: "biện pháp đối phó", pronunciation: "/ˈkaʊntərmeʒər/"},
+  {word: "persistence", meaning: "sự kiên trì", pronunciation: "/pərˈsɪstəns/"},
+  {word: "intensity", meaning: "cường độ", pronunciation: "/ɪnˈtensəti/"},
+  {word: "assumes", meaning: "cho rằng, giả định (ngôi 3)", pronunciation: "/əˈsjuːmz/ (BrE), /əˈsuːmz/ (AmE)"}
+];
+
+let currentQuestionIndex = 0;
+let shuffledVocabulary = [];
+let isAnswered = false;
+
+function startQuiz() {
+  shuffledVocabulary = [...vocabulary].sort(() => Math.random() - 0.5);
+  currentQuestionIndex = 0;
+  isAnswered = false;
+  document.getElementById('quizMode').style.display = 'flex';
+  showQuestion();
+}
+
+function showQuestion() {
+  const current = shuffledVocabulary[currentQuestionIndex];
+  document.getElementById('quizProgress').textContent = `Câu ${currentQuestionIndex + 1} / ${shuffledVocabulary.length}`;
+  document.getElementById('quizWord').textContent = current.word;
+  document.getElementById('quizPronunciation').textContent = current.pronunciation;
+  document.getElementById('quizInput').value = '';
+  document.getElementById('quizInput').className = 'quiz-input';
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  isAnswered = false;
+  
+  // Focus vào input
+  setTimeout(() => {
+    document.getElementById('quizInput').focus();
+  }, 100);
+}
+
+function checkAnswer() {
+  if (isAnswered) return;
+  
+  const userAnswer = document.getElementById('quizInput').value.trim().toLowerCase();
+  const correctAnswer = shuffledVocabulary[currentQuestionIndex].meaning.toLowerCase();
+  const input = document.getElementById('quizInput');
+  const feedback = document.getElementById('quizFeedback');
+  
+  // Kiểm tra nhiều cách viết có thể (tách bằng dấu phẩy hoặc dấu chấm phẩy)
+  const correctAnswers = correctAnswer.split(/[,;]/).map(ans => ans.trim());
+  const isCorrect = correctAnswers.some(ans => 
+    userAnswer === ans || 
+    userAnswer.includes(ans) || 
+    ans.includes(userAnswer)
+  );
+  
+  if (isCorrect) {
+    input.className = 'quiz-input correct';
+    feedback.innerHTML = '<span class="correct-answer">✅ Chính xác! Tuyệt vời!</span>';
+    playTingSound();
+    
+    // Hiệu ứng ting ting
+    const quizContainer = document.querySelector('.quiz-container');
+    quizContainer.classList.add('ting-effect');
+    setTimeout(() => {
+      quizContainer.classList.remove('ting-effect');
+    }, 600);
+    
+  } else {
+    input.className = 'quiz-input incorrect';
+    feedback.innerHTML = `<span class="incorrect-answer">❌ Sai rồi! Đáp án đúng là: <strong>${shuffledVocabulary[currentQuestionIndex].meaning}</strong></span>`;
+  }
+  
+  isAnswered = true;
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex >= shuffledVocabulary.length) {
+    // Kết thúc quiz
+    document.getElementById('quizFeedback').innerHTML = '<span class="correct-answer">🎉 Hoàn thành! Bạn đã làm xong tất cả các câu!</span>';
+    document.getElementById('nextBtn').style.display = 'none';
+    return;
+  }
+  showQuestion();
+}
+
+function closeQuiz() {
+  document.getElementById('quizMode').style.display = 'none';
+}
+
+function playTingSound() {
+  // Tạo âm thanh ting bằng Web Audio API
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (e) {
+    // Nếu không thể tạo âm thanh, bỏ qua
+    console.log('Audio not supported');
+  }
+}
+
+// Cho phép nhấn Enter để kiểm tra
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter' && document.getElementById('quizMode').style.display === 'flex') {
+    if (!isAnswered) {
+      checkAnswer();
+    } else {
+      nextQuestion();
+    }
+  }
+});
+</script>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9821d53c65a891b7',t:'MTc1ODM3NjY1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
