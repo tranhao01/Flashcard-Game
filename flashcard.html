@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Flashcards - Complete Vocabulary Set</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 30px 20px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+  }
+  
+  .header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .card {
+    width: 100%;
+    height: 180px;
+    perspective: 1000px;
+  }
+  
+  .card-inner {
+    position: relative;
+    width: 100%; 
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  
+  .card:hover .card-inner { 
+    transform: rotateY(180deg); 
+  }
+  
+  .card-front, .card-back {
+    position: absolute; 
+    width: 100%; 
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    padding: 20px;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+  
+  .card-front { 
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    color: #2c3e50;
+  }
+  
+  .card-back { 
+    background: linear-gradient(145deg, #4caf50, #45a049);
+    color: white; 
+    transform: rotateY(180deg);
+  }
+  
+  .word {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #2c3e50;
+  }
+  
+  .pronunciation {
+    font-size: 1rem;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-bottom: 5px;
+  }
+  
+  .meaning {
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+  }
+  
+  .stats {
+    text-align: center;
+    margin-top: 40px;
+    color: white;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 2rem;
+    }
+    
+    .cards-container {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .card {
+      height: 160px;
+    }
+    
+    .word {
+      font-size: 1.5rem;
+    }
+    
+    .meaning {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎓 Vocabulary Flashcards</h1>
+  <p>Hover over each card to reveal the Vietnamese meaning</p>
+</div>
+
+<div class="cards-container">
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">exception</div>
+      <div class="pronunciation">/ɪkˈsepʃn/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">ngoại lệ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">overallocated</div>
+      <div class="pronunciation">/ˌoʊvərˈæləkeɪtɪd/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">phân bổ quá mức</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">ingredients</div>
+      <div class="pronunciation">/ɪnˈɡriːdiənts/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">nguyên liệu, thành phần</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">chronic</div>
+      <div class="pronunciation">/ˈkrɒnɪk/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">mãn tính, kinh niên</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">commencement</div>
+      <div class="pronunciation">/kəˈmensmənt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">sự bắt đầu; lễ tốt nghiệp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">predecessor</div>
+      <div class="pronunciation">/ˈpriːdəsesər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">người tiền nhiệm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">summary</div>
+      <div class="pronunciation">/ˈsʌməri/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">bản tóm tắt</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">assign</div>
+      <div class="pronunciation">/əˈsaɪn/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">phân công</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">sponsor</div>
+      <div class="pronunciation">/ˈspɒnsər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tài trợ; nhà tài trợ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">sensitive</div>
+      <div class="pronunciation">/ˈsensətɪv/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">nhạy cảm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">intentionally</div>
+      <div class="pronunciation">/ɪnˈtenʃənəli/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">cố tình</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">arguable</div>
+      <div class="pronunciation">/ˈɑːrɡjuəbl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">có thể tranh luận</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">inconsistency</div>
+      <div class="pronunciation">/ˌɪnkənˈsɪstənsi/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">sự mâu thuẫn</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">transparency</div>
+      <div class="pronunciation">/trænsˈpærənsi/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tính minh bạch</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">capstone</div>
+      <div class="pronunciation">/ˈkæp.stoʊn/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">đỉnh cao; đồ án tốt nghiệp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">manual</div>
+      <div class="pronunciation">/ˈmænjuəl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thủ công; sách hướng dẫn</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">meticulously</div>
+      <div class="pronunciation">/məˈtɪkjələsli/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tỉ mỉ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">comprehensive</div>
+      <div class="pronunciation">/ˌkɒmprɪˈhensɪv/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">toàn diện</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">scenario</div>
+      <div class="pronunciation">/səˈnɑːriəʊ/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">kịch bản, tình huống</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">malicious</div>
+      <div class="pronunciation">/məˈlɪʃəs/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">độc hại, hiểm độc</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">exploit</div>
+      <div class="pronunciation">/ɪkˈsplɔɪt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">khai thác, lợi dụng</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">immerse</div>
+      <div class="pronunciation">/ɪˈmɜːrs/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">đắm chìm vào</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">theoretical</div>
+      <div class="pronunciation">/ˌθiːəˈretɪkl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thuộc lý thuyết</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">utilize</div>
+      <div class="pronunciation">/ˈjuːtəlaɪz/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tận dụng</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">conduct</div>
+      <div class="pronunciation">/ˈkɒndʌkt/ (n), /kənˈdʌkt/ (v)</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">tiến hành; hạnh kiểm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">perspective</div>
+      <div class="pronunciation">/pərˈspektɪv/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">quan điểm, góc nhìn</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">mocking</div>
+      <div class="pronunciation">/ˈmɒkɪŋ/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">chế nhạo</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">belittling</div>
+      <div class="pronunciation">/bɪˈlɪtlɪŋ/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">coi nhẹ, xem thường</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">persistent</div>
+      <div class="pronunciation">/pərˈsɪstənt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">kiên trì, dai dẳng</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">circumstance</div>
+      <div class="pronunciation">/ˈsɜːrkəmstæns/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">hoàn cảnh, tình huống</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">convince</div>
+      <div class="pronunciation">/kənˈvɪns/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thuyết phục</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">compromise</div>
+      <div class="pronunciation">/ˈkɒmprəmaɪz/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">thỏa hiệp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">proper</div>
+      <div class="pronunciation">/ˈprɒpər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">đúng, thích hợp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">advisable</div>
+      <div class="pronunciation">/ədˈvaɪzəbl/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">nên, đáng làm</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">associated</div>
+      <div class="pronunciation">/əˈsəʊʃieɪtɪd/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">liên quan, kết hợp</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">combat</div>
+      <div class="pronunciation">/ˈkɒmbæt/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">chiến đấu, chống lại</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">countermeasure</div>
+      <div class="pronunciation">/ˈkaʊntərmeʒər/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">biện pháp đối phó</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">persistence</div>
+      <div class="pronunciation">/pərˈsɪstəns/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">sự kiên trì</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">intensity</div>
+      <div class="pronunciation">/ɪnˈtensəti/</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">cường độ</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="word">assumes</div>
+      <div class="pronunciation">/əˈsjuːmz/ (BrE), /əˈsuːmz/ (AmE)</div>
+    </div>
+    <div class="card-back">
+      <div class="meaning">cho rằng, giả định (ngôi 3)</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="stats">
+  <p>📚 Complete set of 40 vocabulary words • Hover to reveal meanings</p>
+</div>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9821cb67a1ed712c',t:'MTc1ODM3NjI1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
